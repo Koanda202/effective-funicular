@@ -4,6 +4,7 @@ const express = require('express');
 const { Server } = require('socket.io');
 
 const buildOrdersRouter = require('./routes/orders');
+const buildQrRouter = require('./routes/qr');
 const registerSockets = require('./sockets');
 
 const PORT = process.env.PORT || 3000;
@@ -23,7 +24,12 @@ app.get('/kitchen', (req, res) => {
   res.sendFile(path.join(CLIENT_DIR, 'kitchen', 'index.html'));
 });
 
+app.get('/scan', (req, res) => {
+  res.sendFile(path.join(CLIENT_DIR, 'scan', 'index.html'));
+});
+
 app.use('/api', buildOrdersRouter(io));
+app.use('/api', buildQrRouter());
 app.use(express.static(CLIENT_DIR));
 
 registerSockets(io);
@@ -32,4 +38,5 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`Coffee order server listening on http://0.0.0.0:${PORT}`);
   console.log(`  Order screen:   http://localhost:${PORT}/order`);
   console.log(`  Kitchen screen: http://localhost:${PORT}/kitchen`);
+  console.log(`  Scan-to-order:  http://localhost:${PORT}/scan`);
 });

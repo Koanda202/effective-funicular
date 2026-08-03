@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scan to Order</title>
+  <link rel="stylesheet" href="/scan/scan.css" />
+</head>
+<body>
+  <main>
+    <h1>Scan to Order</h1>
+    <p class="subtitle">Point your phone's camera at the code below</p>
+    <img id="qr-image" src="/api/qr.png" alt="QR code linking to the order page" />
+    <p class="fallback">Or visit <span id="fallback-url">this address</span> in your browser</p>
+  </main>
+
+  <script src="/scan/scan.js"></script>
+</body>
+</html>
