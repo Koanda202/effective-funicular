@@ -1,0 +1,113 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #1f2023;
+  color: #f2ede4;
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #383a3e;
+}
+
+h1 { margin: 0; font-size: 1.5rem; }
+
+.status {
+  font-size: 0.85rem;
+  color: #9aa0a6;
+}
+.status.connected { color: #6fcf7f; }
+.status.disconnected { color: #e0857a; }
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  min-height: calc(100vh - 70px);
+}
+
+.column {
+  background: #2a2b2f;
+  border-radius: 12px;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.column h2 {
+  margin: 0 0 0.6rem;
+  font-size: 1rem;
+  color: #b7bdc4;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  overflow-y: auto;
+}
+
+.card {
+  background: #35373c;
+  border-radius: 10px;
+  padding: 0.8rem 0.9rem;
+  border-left: 4px solid #6f4e37;
+}
+
+.card .ticket {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.card .customer {
+  color: #b7bdc4;
+  font-size: 0.85rem;
+}
+
+.card .drink-line {
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.card .notes {
+  color: #f2c94c;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+
+.card .age {
+  color: #9aa0a6;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.card .actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.card button {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.card .btn-primary { background: #6f4e37; color: #fff; }
+.card .btn-secondary { background: #4a4c52; color: #f2ede4; }
+
+@media (max-width: 900px) {
+  .board { grid-template-columns: 1fr; }
+}

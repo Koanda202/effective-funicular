@@ -1,0 +1,11 @@
+{
+  "name": "coffee-order-multi-device",
+  "private": true,
+  "workspaces": [
+    "server"
+  ],
+  "scripts": {
+    "start": "npm run start --workspace=server",
+    "dev": "npm run dev --workspace=server"
+  }
+}

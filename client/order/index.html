@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Order Coffee" />
+  <title>Order Coffee</title>
+  <link rel="stylesheet" href="order.css" />
+</head>
+<body>
+  <header>
+    <h1>Build Your Order</h1>
+  </header>
+
+  <main id="order-form">
+    <section class="group" data-group-section="drink">
+      <h2>Drink</h2>
+      <div class="button-grid" id="drink-options"></div>
+    </section>
+
+    <section class="group" data-group-section="size">
+      <h2>Size</h2>
+      <div class="button-grid segmented" id="size-options"></div>
+    </section>
+
+    <section class="group" data-group-section="milk">
+      <h2>Milk</h2>
+      <div class="button-grid" id="milk-options"></div>
+    </section>
+
+    <section class="group">
+      <h2>Extra Shots</h2>
+      <div class="stepper">
+        <button type="button" id="shots-minus">&minus;</button>
+        <span id="shots-count">0</span>
+        <button type="button" id="shots-plus">+</button>
+      </div>
+    </section>
+
+    <section class="group" data-group-section="syrups">
+      <h2>Syrups</h2>
+      <div class="button-grid" id="syrup-options"></div>
+    </section>
+
+    <section class="group" data-group-section="temperature">
+      <h2>Temperature</h2>
+      <div class="button-grid segmented" id="temperature-options"></div>
+    </section>
+
+    <section class="group">
+      <h2>Name (optional)</h2>
+      <input type="text" id="customer-name" placeholder="Guest" maxlength="40" />
+    </section>
+
+    <section class="group">
+      <h2>Notes (optional)</h2>
+      <input type="text" id="notes" placeholder="e.g. extra hot, allergy note" maxlength="140" />
+    </section>
+
+    <section class="summary" id="summary">Choose a drink to get started.</section>
+
+    <button type="button" id="submit-btn" disabled>Send Order</button>
+    <div class="error-banner" id="error-banner" hidden>
+      <span id="error-text"></span>
+      <button type="button" id="retry-btn">Retry</button>
+    </div>
+  </main>
+
+  <div class="overlay" id="confirm-overlay" hidden>
+    <div class="overlay-card">
+      <div class="checkmark">&#10003;</div>
+      <p id="confirm-text"></p>
+    </div>
+  </div>
+
+  <script src="../shared/menu.js"></script>
+  <script src="order.js"></script>
+</body>
+</html>
