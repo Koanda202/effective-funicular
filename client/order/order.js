@@ -9,6 +9,7 @@
   };
 
   const els = {
+    orderForm: document.getElementById('order-form'),
     summary: document.getElementById('summary'),
     submitBtn: document.getElementById('submit-btn'),
     shotsCount: document.getElementById('shots-count'),
@@ -17,9 +18,54 @@
     errorBanner: document.getElementById('error-banner'),
     errorText: document.getElementById('error-text'),
     retryBtn: document.getElementById('retry-btn'),
-    overlay: document.getElementById('confirm-overlay'),
-    confirmText: document.getElementById('confirm-text'),
+    trackingView: document.getElementById('tracking-view'),
+    trackIcon: document.getElementById('track-icon'),
+    trackTicket: document.getElementById('track-ticket'),
+    trackStatus: document.getElementById('track-status'),
+    newOrderBtn: document.getElementById('new-order-btn'),
   };
+
+  const socket = io();
+  let activeOrder = null;
+
+  const STATUS_TEXT = {
+    pending: "Please pay at the counter to start your drink.",
+    'in-progress': 'Your drink is being made…',
+    completed: 'Your order is ready! Enjoy ☕',
+  };
+
+  function renderTracking() {
+    if (!activeOrder) return;
+    const ready = activeOrder.status === 'completed';
+    els.trackTicket.textContent = `Order #${activeOrder.ticketNumber}`;
+    els.trackStatus.textContent = STATUS_TEXT[activeOrder.status] || '';
+    els.trackStatus.classList.toggle('ready', ready);
+    els.trackIcon.classList.toggle('ready', ready);
+    els.trackIcon.textContent = ready ? '☕' : '✓';
+    if (ready && navigator.vibrate) navigator.vibrate([200, 100, 200]);
+  }
+
+  function showTracking(order) {
+    activeOrder = order;
+    sessionStorage.setItem('activeOrderId', order.id);
+    renderTracking();
+    els.orderForm.hidden = true;
+    els.trackingView.hidden = false;
+  }
+
+  function showBuilder() {
+    activeOrder = null;
+    sessionStorage.removeItem('activeOrderId');
+    els.trackingView.hidden = true;
+    els.orderForm.hidden = false;
+  }
+
+  socket.on('order:updated', (order) => {
+    if (activeOrder && order.id === activeOrder.id) {
+      activeOrder = order;
+      renderTracking();
+    }
+  });
 
   function renderOptionGroup(containerId, values, group, multi) {
     const container = document.getElementById(containerId);
@@ -121,12 +167,7 @@
         throw new Error(body.error || `Server error (${res.status})`);
       }
       const order = await res.json();
-      els.confirmText.textContent = `Order #${order.ticketNumber}! Please pay at the counter to start your drink.`;
-      els.overlay.hidden = false;
-      setTimeout(() => {
-        els.overlay.hidden = true;
-        resetForm();
-      }, 3500);
+      showTracking(order);
     } catch (err) {
       els.errorText.textContent = err.message || 'Could not send order. Check the connection and retry.';
       els.errorBanner.hidden = false;
@@ -136,6 +177,27 @@
 
   document.getElementById('submit-btn').addEventListener('click', submitOrder);
   els.retryBtn.addEventListener('click', submitOrder);
+  els.newOrderBtn.addEventListener('click', () => {
+    resetForm();
+    showBuilder();
+  });
+
+  async function restoreTracking() {
+    const savedId = sessionStorage.getItem('activeOrderId');
+    if (!savedId) return;
+    try {
+      const res = await fetch('/api/orders');
+      const orders = await res.json();
+      const found = orders.find((o) => o.id === savedId);
+      if (found) {
+        showTracking(found);
+      } else {
+        sessionStorage.removeItem('activeOrderId');
+      }
+    } catch (err) {
+      // Leave the builder showing if we can't reach the server yet.
+    }
+  }
 
   try {
     const menu = await fetchMenu();
@@ -148,4 +210,6 @@
   } catch (err) {
     els.summary.textContent = 'Failed to load menu. Please reload the page.';
   }
+
+  await restoreTracking();
 })();

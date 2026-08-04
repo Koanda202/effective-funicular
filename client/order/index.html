@@ -67,13 +67,16 @@
     </div>
   </main>
 
-  <div class="overlay" id="confirm-overlay" hidden>
-    <div class="overlay-card">
-      <div class="checkmark">&#10003;</div>
-      <p id="confirm-text"></p>
+  <section id="tracking-view" hidden>
+    <div class="track-card">
+      <div class="track-icon" id="track-icon">&#10003;</div>
+      <h2 id="track-ticket"></h2>
+      <p class="track-status" id="track-status"></p>
+      <button type="button" id="new-order-btn">Start New Order</button>
     </div>
-  </div>
+  </section>
 
+  <script src="/socket.io/socket.io.js"></script>
   <script src="/shared/menu.js"></script>
   <script src="/order/order.js"></script>
 </body>
