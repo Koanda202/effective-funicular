@@ -121,12 +121,12 @@
         throw new Error(body.error || `Server error (${res.status})`);
       }
       const order = await res.json();
-      els.confirmText.textContent = `Order #${order.ticketNumber} sent to the kitchen!`;
+      els.confirmText.textContent = `Order #${order.ticketNumber}! Please pay at the counter to start your drink.`;
       els.overlay.hidden = false;
       setTimeout(() => {
         els.overlay.hidden = true;
         resetForm();
-      }, 2000);
+      }, 3500);
     } catch (err) {
       els.errorText.textContent = err.message || 'Could not send order. Check the connection and retry.';
       els.errorBanner.hidden = false;

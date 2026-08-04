@@ -45,7 +45,7 @@
       actions.push(`<button class="btn-secondary" data-action="prev">Undo</button>`);
     }
     if (NEXT_STATUS[order.status]) {
-      const label = order.status === 'pending' ? 'Start' : 'Complete';
+      const label = order.status === 'pending' ? 'Mark Paid' : 'Complete';
       actions.push(`<button class="btn-primary" data-action="next">${label}</button>`);
     }
 
