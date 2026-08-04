@@ -71,48 +71,64 @@ kiosk app with no browser chrome.
 ## Making the QR code work from anywhere (not just your Wi-Fi)
 
 By default the `/scan` QR code only works for phones on the same Wi-Fi as
-the server. To make it reachable from any network (so it's safe to print
-once and never breaks), put a **Cloudflare Tunnel** in front of the server.
-It gives you a stable public `https://` address, and the app already
-adapts to it automatically — `server/src/index.js` trusts the
-`X-Forwarded-*` headers a tunnel sets, so the QR code, order links, and
-kitchen tracking updates all work the same way through the tunnel as they
-do on the LAN. No other code changes are needed.
+the server. To make it reachable from any network — with no domain to buy
+and no cost — put a free **ngrok** static domain in front of the server.
+The app already adapts to it automatically: `server/src/index.js` trusts
+the `X-Forwarded-*` headers a tunnel sets, so the QR code, order links,
+and kitchen tracking updates all work the same way through the tunnel as
+they do on the LAN. No other code changes are needed.
 
 This does mean the app becomes reachable by anyone with the link, not just
 customers physically in your shop — there's no login on `/order` or
 `/kitchen`. That's an accepted tradeoff for keeping things simple; add a
 shared passcode later if that becomes a problem.
 
-**Setup** (needs a domain name you own, added to a free Cloudflare
-account — that's what makes the address permanent):
+One caveat of the free tier: the **first** time any given visitor's phone
+hits your ngrok URL, they'll briefly see an ngrok interstitial page
+("You are about to visit... Visit Site") before reaching `/order` — one
+extra tap, not a real login, and only shows once per browser.
 
-1. Add your domain to Cloudflare (free plan is fine) if it isn't already,
-   and point its nameservers at Cloudflare per their dashboard instructions.
-2. Install `cloudflared` on the computer running the server:
-   - macOS: `brew install cloudflared`
-   - Linux: see https://pkg.cloudflare.com for your distro's package
-3. Authenticate it to your Cloudflare account (opens a browser once):
+**Setup** (free ngrok account, no credit card, no domain purchase):
+
+1. Sign up at https://ngrok.com (email only).
+2. Install ngrok on the computer running the server:
+   - macOS: `brew install ngrok`
+   - Windows/Linux: https://ngrok.com/download
+3. Copy your authtoken from https://dashboard.ngrok.com/get-started/your-authtoken
+   and run:
    ```bash
-   cloudflared tunnel login
+   ngrok config add-authtoken <YOUR_TOKEN>
    ```
-4. Create a named tunnel and route a subdomain to it (pick any subdomain,
-   e.g. `coffee`):
-   ```bash
-   cloudflared tunnel create coffee-order
-   cloudflared tunnel route dns coffee-order coffee.yourdomain.com
-   ```
+4. Claim your one free static domain at https://dashboard.ngrok.com/domains
+   (click "+ Create Domain") — you'll get something like
+   `random-words-1234.ngrok-free.app`. This is yours permanently at no cost.
 5. Run the tunnel, pointing it at your local server:
    ```bash
-   cloudflared tunnel run --url http://localhost:3000 coffee-order
+   ngrok http --url=random-words-1234.ngrok-free.app 3000
    ```
-   Leave this running alongside `npm start` (in its own terminal, or
-   install it as a background service with `cloudflared service install`
-   so it survives a reboot).
-6. Open `https://coffee.yourdomain.com/scan` (not `localhost`, not the LAN
-   IP) and print/display that QR code — it now works from any phone on any
-   network, and will keep working as long as the tunnel and server are
-   running.
+   Leave this running in its own terminal, alongside `npm start`.
+6. Open `https://random-words-1234.ngrok-free.app/scan` (not `localhost`,
+   not the LAN IP) and print/display that QR code — it now works from any
+   phone on any network, and keeps working indefinitely as long as the
+   tunnel and server are both running. If either one stops (computer off,
+   `ngrok`/`npm start` closed), ordering pauses until you start them again,
+   but the URL itself — and the printed QR — never changes.
+
+### If you get a domain later: Cloudflare Tunnel instead
+
+Owning a domain unlocks a cleaner alternative with no interstitial page:
+
+1. Add your domain to Cloudflare (free plan) and point its nameservers at
+   Cloudflare per their dashboard instructions.
+2. Install `cloudflared`: `brew install cloudflared` (macOS), or see
+   https://pkg.cloudflare.com for other platforms.
+3. `cloudflared tunnel login` (opens a browser once to authenticate).
+4. `cloudflared tunnel create coffee-order`, then
+   `cloudflared tunnel route dns coffee-order coffee.yourdomain.com`.
+5. `cloudflared tunnel run --url http://localhost:3000 coffee-order` —
+   leave running alongside `npm start` (or `cloudflared service install`
+   to run it as a background service that survives a reboot).
+6. Open `https://coffee.yourdomain.com/scan` and print that QR instead.
 
 ## Extending with a real printer
 
