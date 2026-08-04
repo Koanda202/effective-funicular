@@ -11,6 +11,10 @@ const PORT = process.env.PORT || 3000;
 const CLIENT_DIR = path.join(__dirname, '..', '..', 'client');
 
 const app = express();
+// Trust the X-Forwarded-* headers a reverse proxy/tunnel (e.g. Cloudflare
+// Tunnel) sets, so req.protocol/req.get('host') reflect the public
+// https://your-domain address instead of this process's local http://.
+app.set('trust proxy', true);
 const server = http.createServer(app);
 const io = new Server(server);
 

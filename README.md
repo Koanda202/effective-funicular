@@ -51,9 +51,12 @@ on the same network can reach it.
    `/scan` using the LAN IP (not `localhost`) so phones on the same Wi-Fi
    can actually reach it.
 5. Submit an order (from the iPad or a customer's phone) — it appears
-   immediately in the "New" column on every open kitchen display. Baristas
-   tap "Start" / "Complete" to move it through the queue, and every
-   display updates together.
+   immediately in the "Awaiting Payment" column on every open kitchen
+   display, and the customer sees a live tracking screen on their own
+   device. Baristas tap "Mark Paid" once payment is collected at the
+   register, then "Complete" once the drink is made — the customer's
+   screen updates automatically at each step, ending in "Your order is
+   ready!"
 
 No HTTPS is required for LAN use. Note that most phone cameras only follow
 `http://` QR links if the phone is actually able to reach that address —
@@ -64,6 +67,52 @@ double check the phone is on the same Wi-Fi network as the server.
 In Safari, open `/order`, tap Share → "Add to Home Screen". The page
 declares `apple-mobile-web-app-capable`, so it launches full-screen like a
 kiosk app with no browser chrome.
+
+## Making the QR code work from anywhere (not just your Wi-Fi)
+
+By default the `/scan` QR code only works for phones on the same Wi-Fi as
+the server. To make it reachable from any network (so it's safe to print
+once and never breaks), put a **Cloudflare Tunnel** in front of the server.
+It gives you a stable public `https://` address, and the app already
+adapts to it automatically — `server/src/index.js` trusts the
+`X-Forwarded-*` headers a tunnel sets, so the QR code, order links, and
+kitchen tracking updates all work the same way through the tunnel as they
+do on the LAN. No other code changes are needed.
+
+This does mean the app becomes reachable by anyone with the link, not just
+customers physically in your shop — there's no login on `/order` or
+`/kitchen`. That's an accepted tradeoff for keeping things simple; add a
+shared passcode later if that becomes a problem.
+
+**Setup** (needs a domain name you own, added to a free Cloudflare
+account — that's what makes the address permanent):
+
+1. Add your domain to Cloudflare (free plan is fine) if it isn't already,
+   and point its nameservers at Cloudflare per their dashboard instructions.
+2. Install `cloudflared` on the computer running the server:
+   - macOS: `brew install cloudflared`
+   - Linux: see https://pkg.cloudflare.com for your distro's package
+3. Authenticate it to your Cloudflare account (opens a browser once):
+   ```bash
+   cloudflared tunnel login
+   ```
+4. Create a named tunnel and route a subdomain to it (pick any subdomain,
+   e.g. `coffee`):
+   ```bash
+   cloudflared tunnel create coffee-order
+   cloudflared tunnel route dns coffee-order coffee.yourdomain.com
+   ```
+5. Run the tunnel, pointing it at your local server:
+   ```bash
+   cloudflared tunnel run --url http://localhost:3000 coffee-order
+   ```
+   Leave this running alongside `npm start` (in its own terminal, or
+   install it as a background service with `cloudflared service install`
+   so it survives a reboot).
+6. Open `https://coffee.yourdomain.com/scan` (not `localhost`, not the LAN
+   IP) and print/display that QR code — it now works from any phone on any
+   network, and will keep working as long as the tunnel and server are
+   running.
 
 ## Extending with a real printer
 
