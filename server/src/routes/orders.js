@@ -11,6 +11,7 @@ function buildOrdersRouter(io) {
       sizes: constants.SIZES,
       milks: constants.MILKS,
       syrups: constants.SYRUPS,
+      pastries: constants.PASTRIES,
       temperatures: constants.TEMPERATURES,
       maxExtraShots: constants.MAX_EXTRA_SHOTS,
     });

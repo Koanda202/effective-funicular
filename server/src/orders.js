@@ -1,12 +1,12 @@
 const { v4: uuidv4 } = require('uuid');
 const store = require('./store');
 const printHooks = require('./printing/printHooks');
-const { DRINKS, SIZES, MILKS, SYRUPS, TEMPERATURES, STATUSES, MAX_EXTRA_SHOTS } = require('./constants');
+const { DRINKS, SIZES, MILKS, SYRUPS, PASTRIES, TEMPERATURES, STATUSES, MAX_EXTRA_SHOTS } = require('./constants');
 
 class ValidationError extends Error {}
 
 function validateInput(input) {
-  const { drink, size, milk, temperature, extraShots = 0, syrups = [] } = input;
+  const { drink, size, milk, temperature, extraShots = 0, syrups = [], pastries = [] } = input;
 
   if (!DRINKS.includes(drink)) throw new ValidationError(`Invalid drink: ${drink}`);
   if (!SIZES.includes(size)) throw new ValidationError(`Invalid size: ${size}`);
@@ -17,6 +17,9 @@ function validateInput(input) {
   }
   if (!Array.isArray(syrups) || syrups.some((s) => !SYRUPS.includes(s))) {
     throw new ValidationError(`Invalid syrups: ${JSON.stringify(syrups)}`);
+  }
+  if (!Array.isArray(pastries) || pastries.some((p) => !PASTRIES.includes(p))) {
+    throw new ValidationError(`Invalid pastries: ${JSON.stringify(pastries)}`);
   }
 }
 
@@ -33,6 +36,7 @@ function createOrder(input) {
     milk: input.milk,
     extraShots: input.extraShots || 0,
     syrups: input.syrups || [],
+    pastries: input.pastries || [],
     temperature: input.temperature,
     notes: (input.notes || '').trim(),
     status: 'pending',

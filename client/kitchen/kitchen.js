@@ -32,6 +32,7 @@
     line += order.drink;
     if (order.extraShots > 0) line += `, +${order.extraShots} shot${order.extraShots > 1 ? 's' : ''}`;
     if (order.syrups.length) line += `, ${order.syrups.join(' + ')}`;
+    if (order.pastries && order.pastries.length) line += ` — with ${order.pastries.join(' + ')}`;
     return line;
   }
 

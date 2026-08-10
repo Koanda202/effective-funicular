@@ -5,6 +5,7 @@
     milk: null,
     extraShots: 0,
     syrups: [],
+    pastries: [],
     temperature: null,
   };
 
@@ -90,7 +91,8 @@
     if (currentOrder.drink) parts.push(currentOrder.drink);
     let line = parts.length ? parts.join(' ') : 'Choose a drink to get started.';
     if (currentOrder.extraShots > 0) line += `, +${currentOrder.extraShots} shot${currentOrder.extraShots > 1 ? 's' : ''}`;
-    if (currentOrder.syrups.length) line += `, ${currentOrder.syrups.join(' + ')} syrup`;
+    if (currentOrder.syrups.length) line += `, ${currentOrder.syrups.join(' + ')} flavor`;
+    if (currentOrder.pastries.length) line += `, with ${currentOrder.pastries.join(' + ')}`;
     els.summary.textContent = line;
 
     const ready = currentOrder.drink && currentOrder.size && currentOrder.milk && currentOrder.temperature;
@@ -103,12 +105,12 @@
     const { group, value, multi } = btn.dataset;
 
     if (multi === 'true') {
-      const idx = currentOrder.syrups.indexOf(value);
+      const idx = currentOrder[group].indexOf(value);
       if (idx >= 0) {
-        currentOrder.syrups.splice(idx, 1);
+        currentOrder[group].splice(idx, 1);
         btn.classList.remove('selected');
       } else {
-        currentOrder.syrups.push(value);
+        currentOrder[group].push(value);
         btn.classList.add('selected');
       }
     } else {
@@ -138,6 +140,7 @@
     currentOrder.milk = null;
     currentOrder.extraShots = 0;
     currentOrder.syrups = [];
+    currentOrder.pastries = [];
     currentOrder.temperature = null;
     document.querySelectorAll('.option-btn.selected').forEach((b) => b.classList.remove('selected'));
     els.shotsCount.textContent = '0';
@@ -206,6 +209,7 @@
     renderOptionGroup('milk-options', menu.milks, 'milk', false);
     renderOptionGroup('syrup-options', menu.syrups, 'syrups', true);
     renderOptionGroup('temperature-options', menu.temperatures, 'temperature', false);
+    renderOptionGroup('pastry-options', menu.pastries, 'pastries', true);
     updateSummary();
   } catch (err) {
     els.summary.textContent = 'Failed to load menu. Please reload the page.';
