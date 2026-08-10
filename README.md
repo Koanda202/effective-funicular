@@ -51,12 +51,12 @@ on the same network can reach it.
    `/scan` using the LAN IP (not `localhost`) so phones on the same Wi-Fi
    can actually reach it.
 5. Submit an order (from the iPad or a customer's phone) — it appears
-   immediately in the "Awaiting Payment" column on every open kitchen
-   display, and the customer sees a live tracking screen on their own
-   device. Baristas tap "Mark Paid" once payment is collected at the
-   register, then "Complete" once the drink is made — the customer's
-   screen updates automatically at each step, ending in "Your order is
-   ready!"
+   immediately in the "New" column on every open kitchen display, and the
+   customer sees a live tracking screen on their own device with a
+   "Donate Now" button (linking to Zeffy) and a note that paying at the
+   counter works too. Baristas tap "Start" once they begin making the
+   drink, then "Complete" once it's done — the customer's screen updates
+   automatically at each step, ending in "Your order is ready!"
 
 No HTTPS is required for LAN use. Note that most phone cameras only follow
 `http://` QR links if the phone is actually able to reach that address —

@@ -30,7 +30,7 @@
   let activeOrder = null;
 
   const STATUS_TEXT = {
-    pending: "Please pay at the counter to start your drink.",
+    pending: 'Your order has been sent to the kitchen!',
     'in-progress': 'Your drink is being made…',
     completed: 'Your order is ready! Enjoy ☕',
   };
