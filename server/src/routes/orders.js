@@ -28,9 +28,9 @@ function buildOrdersRouter(io) {
 
   router.post('/orders', (req, res) => {
     try {
-      const order = orders.createOrder(req.body || {});
-      io.emit('order:new', order);
-      res.status(201).json(order);
+      const createdOrders = orders.createOrderBatch(req.body || {});
+      createdOrders.forEach((order) => io.emit('order:new', order));
+      res.status(201).json(createdOrders);
     } catch (err) {
       if (err instanceof orders.ValidationError) {
         res.status(400).json({ error: err.message });

@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="Order Coffee" />
-  <title>Café Menu</title>
+  <meta name="apple-mobile-web-app-title" content="Commission Coffee Cart" />
+  <title>Commission Coffee Cart</title>
   <link rel="stylesheet" href="/order/order.css" />
 </head>
 <body>
   <header>
-    <h1>Café Menu</h1>
+    <h1>Commission Coffee Cart</h1>
   </header>
 
   <main id="order-form">
@@ -46,6 +46,11 @@
       <div class="button-grid segmented" id="temperature-options"></div>
     </section>
 
+    <section class="group">
+      <button type="button" id="add-drink-btn" disabled>Add Another Drink</button>
+      <div id="cart-list"></div>
+    </section>
+
     <section class="menu-section">
       <h2 class="menu-heading">Pastries</h2>
       <div class="menu-grid" id="pastry-options"></div>
@@ -76,7 +81,7 @@
     <div class="track-card">
       <div class="track-icon" id="track-icon">&#10003;</div>
       <h2 id="track-ticket"></h2>
-      <p class="track-status" id="track-status"></p>
+      <div id="track-items"></div>
       <a class="donate-btn" href="https://www.zeffy.com/en-US/donation-form/commission-coffee-cart-donation" target="_blank" rel="noopener noreferrer">Donate Now</a>
       <p class="donate-note">You can also pay at the counter if needed.</p>
       <button type="button" id="new-order-btn">Start New Order</button>

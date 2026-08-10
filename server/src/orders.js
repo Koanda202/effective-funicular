@@ -29,6 +29,7 @@ function createOrder(input) {
   const now = new Date().toISOString();
   const order = {
     id: uuidv4(),
+    batchId: input.batchId || uuidv4(),
     ticketNumber: store.nextTicketNumber(),
     customerName: (input.customerName || '').trim() || 'Guest',
     drink: input.drink,
@@ -55,6 +56,38 @@ function createOrder(input) {
   return order;
 }
 
+// A customer can order several drinks at once. Each drink becomes its own
+// independent order (own ticket number, own status) sharing one batchId,
+// so the kitchen sees and can progress each drink separately while the
+// customer's tracking screen still shows them as one submission.
+function createOrderBatch(input) {
+  const items = Array.isArray(input.items) ? input.items : [];
+  if (items.length === 0) {
+    throw new ValidationError('Order must include at least one drink');
+  }
+
+  // Validate every item before creating any of them, so one bad item in a
+  // multi-drink cart can't leave earlier items silently created.
+  items.forEach((item) => validateInput(item));
+
+  const pastries = input.pastries || [];
+  if (!Array.isArray(pastries) || pastries.some((p) => !PASTRIES.includes(p))) {
+    throw new ValidationError(`Invalid pastries: ${JSON.stringify(pastries)}`);
+  }
+
+  const batchId = uuidv4();
+  const { customerName, notes } = input;
+
+  return items.map((item, index) => createOrder({
+    ...item,
+    customerName,
+    notes,
+    // Pastries apply to the whole order, not each drink - attach once.
+    pastries: index === 0 ? pastries : [],
+    batchId,
+  }));
+}
+
 function setStatus(id, status) {
   if (!STATUSES.includes(status)) {
     throw new ValidationError(`Invalid status: ${status}`);
@@ -68,4 +101,4 @@ function listOrders() {
   return store.getAll();
 }
 
-module.exports = { createOrder, setStatus, listOrders, ValidationError };
+module.exports = { createOrder, createOrderBatch, setStatus, listOrders, ValidationError };

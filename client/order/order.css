@@ -153,6 +153,45 @@ input[type="text"] {
   margin-bottom: 1.4rem;
   font-size: 1.05rem;
   min-height: 1.4em;
+  white-space: pre-line;
+}
+
+#add-drink-btn {
+  width: 100%;
+  min-height: 52px;
+  border: 1.5px solid #1a1a1a;
+  border-radius: 2px;
+  background: #fff;
+  color: #1a1a1a;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 0.8rem;
+}
+
+#add-drink-btn:disabled { border-color: #b8b3aa; color: #b8b3aa; cursor: not-allowed; }
+
+.cart-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-top: none;
+  font-size: 0.95rem;
+}
+
+.cart-row:first-child { border-top: 1px solid #ccc; }
+
+.cart-remove {
+  border: none;
+  background: none;
+  color: #c0392b;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0 0.3rem;
 }
 
 #submit-btn {
@@ -220,16 +259,25 @@ input[type="text"] {
 
 #track-ticket { margin: 0.2rem 0 0.6rem; }
 
-.track-status {
-  font-size: 1.15rem;
-  color: #555;
-  margin: 0 0 1.4rem;
+#track-items { margin: 0 0 1.4rem; text-align: left; }
+
+.track-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.8rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e0d8;
+  font-size: 0.98rem;
 }
 
-.track-status.ready {
-  color: #3a8f4b;
-  font-weight: 700;
-}
+.track-item:last-child { border-bottom: none; }
+
+.track-item-name { color: #1a1a1a; }
+
+.track-item-status { color: #555; white-space: nowrap; }
+
+.track-item-status.ready { color: #3a8f4b; font-weight: 700; }
 
 .donate-btn {
   display: block;
