@@ -8,12 +8,17 @@ function buildOrdersRouter(io) {
   router.get('/menu', (req, res) => {
     res.json({
       drinks: constants.DRINKS,
+      drinkCategories: [
+        { name: 'Specialty Coffee Drinks', items: constants.SPECIALTY_COFFEE_DRINKS },
+        { name: 'Non Coffee Drinks', items: constants.NON_COFFEE_DRINKS },
+      ],
       sizes: constants.SIZES,
       milks: constants.MILKS,
       syrups: constants.SYRUPS,
       pastries: constants.PASTRIES,
       temperatures: constants.TEMPERATURES,
       maxExtraShots: constants.MAX_EXTRA_SHOTS,
+      descriptions: { ...constants.DRINK_DESCRIPTIONS, ...constants.PASTRY_DESCRIPTIONS },
     });
   });
 

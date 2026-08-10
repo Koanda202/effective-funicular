@@ -5,21 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="Order Coffee" />
-  <title>Order Coffee</title>
+  <title>Café Menu</title>
   <link rel="stylesheet" href="/order/order.css" />
 </head>
 <body>
   <header>
-    <h1>Build Your Order</h1>
+    <h1>Café Menu</h1>
   </header>
 
   <main id="order-form">
-    <section class="group" data-group-section="drink">
-      <h2>Drink</h2>
-      <div class="button-grid" id="drink-options"></div>
-    </section>
+    <div id="drink-categories"></div>
+    <p class="menu-note">All drinks can be made with oat milk upon request.</p>
 
-    <section class="group" data-group-section="size">
+    <section class="group">
       <h2>Size</h2>
       <div class="button-grid segmented" id="size-options"></div>
     </section>
@@ -48,9 +46,9 @@
       <div class="button-grid segmented" id="temperature-options"></div>
     </section>
 
-    <section class="group" data-group-section="pastries">
-      <h2>Pastries (optional)</h2>
-      <div class="button-grid" id="pastry-options"></div>
+    <section class="menu-section">
+      <h2 class="menu-heading">Pastries</h2>
+      <div class="menu-grid" id="pastry-options"></div>
     </section>
 
     <section class="group">
@@ -70,6 +68,8 @@
       <span id="error-text"></span>
       <button type="button" id="retry-btn">Retry</button>
     </div>
+
+    <p class="allergen-note">Our kitchen is not allergen-free. Please enjoy our treats with care.</p>
   </main>
 
   <section id="tracking-view" hidden>

@@ -83,6 +83,60 @@
     });
   }
 
+  function buildMenuCard(value, group, multi, description) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'option-btn menu-card';
+    btn.dataset.group = group;
+    btn.dataset.value = value;
+    btn.dataset.multi = multi ? 'true' : 'false';
+
+    const name = document.createElement('span');
+    name.className = 'menu-card-name';
+    name.textContent = value;
+    btn.appendChild(name);
+
+    if (description) {
+      const desc = document.createElement('span');
+      desc.className = 'menu-card-desc';
+      desc.textContent = description;
+      btn.appendChild(desc);
+    }
+
+    return btn;
+  }
+
+  function renderMenuCards(containerId, values, group, multi, descriptions) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    values.forEach((value) => {
+      container.appendChild(buildMenuCard(value, group, multi, descriptions[value]));
+    });
+  }
+
+  function renderDrinkCategories(categories, descriptions) {
+    const container = document.getElementById('drink-categories');
+    container.innerHTML = '';
+    categories.forEach((category) => {
+      const section = document.createElement('section');
+      section.className = 'menu-section';
+
+      const heading = document.createElement('h2');
+      heading.className = 'menu-heading';
+      heading.textContent = category.name;
+      section.appendChild(heading);
+
+      const grid = document.createElement('div');
+      grid.className = 'menu-grid';
+      category.items.forEach((value) => {
+        grid.appendChild(buildMenuCard(value, 'drink', false, descriptions[value]));
+      });
+      section.appendChild(grid);
+
+      container.appendChild(section);
+    });
+  }
+
   function updateSummary() {
     const parts = [];
     if (currentOrder.size) parts.push(currentOrder.size);
@@ -115,7 +169,7 @@
       }
     } else {
       currentOrder[group] = value;
-      btn.parentElement.querySelectorAll('.option-btn').forEach((b) => b.classList.remove('selected'));
+      document.querySelectorAll(`.option-btn[data-group="${group}"]`).forEach((b) => b.classList.remove('selected'));
       btn.classList.add('selected');
     }
     updateSummary();
@@ -204,12 +258,13 @@
 
   try {
     const menu = await fetchMenu();
-    renderOptionGroup('drink-options', menu.drinks, 'drink', false);
+    const descriptions = menu.descriptions || {};
+    renderDrinkCategories(menu.drinkCategories || [{ name: 'Drink', items: menu.drinks }], descriptions);
     renderOptionGroup('size-options', menu.sizes, 'size', false);
     renderOptionGroup('milk-options', menu.milks, 'milk', false);
     renderOptionGroup('syrup-options', menu.syrups, 'syrups', true);
     renderOptionGroup('temperature-options', menu.temperatures, 'temperature', false);
-    renderOptionGroup('pastry-options', menu.pastries, 'pastries', true);
+    renderMenuCards('pastry-options', menu.pastries, 'pastries', true, descriptions);
     updateSummary();
   } catch (err) {
     els.summary.textContent = 'Failed to load menu. Please reload the page.';
